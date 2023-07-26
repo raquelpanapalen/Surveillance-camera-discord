@@ -1,0 +1,8 @@
+opencv-python
+pillow
+keras-facenet
+scikit-learn
+python-dotenv
+discord.py
+matplotlib
+tensorflow

@@ -6,7 +6,7 @@ from keras_facenet import FaceNet
 def extract_embeddings(image, face=False, verbose=False):
     output = {}
     embedder = FaceNet()
-    results = embedder.extract(image, threshold=0.90)
+    results = embedder.extract(image, threshold=0.95)
     if len(results) != 1:
         quit(results)
     output['embeddings'] = results[0]['embedding']

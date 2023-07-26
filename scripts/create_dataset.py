@@ -2,7 +2,7 @@ import os
 import numpy as np
 from PIL import Image
 
-from scripts.utils import extract_embeddings
+from utils import extract_embeddings
 
 
 class Dataset:

@@ -1,25 +1,28 @@
 import cv2
+from PIL import Image
+import asyncio
 from threading import Thread
 
 from scripts.predict import Predictor
 
 
 class VideoStream:
-    def __init__(self, src=0) -> None:
-        # initialize video camera stream and predictor
-        self.stream = cv2.VideoCapture(src)
-        # self.predictor = Predictor()
+    def __init__(self, model_path, labels_path, src=0) -> None:
+        self.src = src
+        # self.predictor = Predictor(model_path=model_path, labels_path=labels_path)
 
-        # indicates if the thread should be stopped
-        self.stopped = False
+        # indicates if the thread is stopped
+        self.stopped = True
 
-    def start(self):
+    def start(self, ctx):
         # start the thread to read frames
-        self.thread = Thread(target=self.update)
+        self.stream = cv2.VideoCapture(self.src)
+        self.stopped = False
+        self.thread = Thread(target=self.update, args=(ctx,))
         self.thread.start()
         return self
 
-    def update(self):
+    def update(self, ctx):
         # keep looping infinitely until thread is stopped
         while True:
             if self.stopped:
@@ -27,10 +30,11 @@ class VideoStream:
 
             # otherwise, read next frame
             _, self.frame = self.stream.read()
-            print(self.frame)
 
     def read(self):
-        return self.frame
+        img = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
+        img = Image.fromarray(img)
+        return img
 
     def stop(self):
         self.stopped = True

@@ -2,13 +2,13 @@ import pickle
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 
-from scripts.utils import extract_embeddings
+from .utils import extract_embeddings
 
 
 class Predictor:
-    def __init__(self, model_path, encoder_path) -> None:
+    def __init__(self, model_path, labels_path) -> None:
         self.label_encoder = LabelEncoder()
-        self.label_encoder.classes_ = np.load(encoder_path)
+        self.label_encoder.classes_ = np.load(labels_path)
         self.model = pickle.load(open(model_path, 'rb'))
 
     def predict(self, image):

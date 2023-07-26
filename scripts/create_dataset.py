@@ -21,6 +21,7 @@ class Dataset:
             pixels = np.asarray(image)
             output = extract_embeddings(pixels, verbose=self.verbose)
             embeddings.append(output['embeddings'])
+
         return embeddings
 
     def load_subset(self, subset, dir):
@@ -39,10 +40,8 @@ class Dataset:
 
     def save_data(self):
         self.data = {
-            #'train_x': [],
             'train_y': [],
             'train_emb': [],
-            #'test_x': [],
             'test_y': [],
             'test_emb': [],
         }
@@ -50,8 +49,5 @@ class Dataset:
         for subset in subsets:
             self.load_subset(subset=subset, dir=f'{self.data_path}/{subset}')
 
-        # save the dataset for further use
-        if self.verbose:
-            print(self.data)
-
+        self.data = {np.asarray(self.data[key]) for key in self.data.keys()}
         np.save(f'{self.data_path}/data.npy', self.data)

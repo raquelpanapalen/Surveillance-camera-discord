@@ -18,11 +18,14 @@ class VideoStream:
         # start the thread to read frames
         self.stream = cv2.VideoCapture(self.src)
         self.stopped = False
-        self.thread = Thread(target=self.update, args=(ctx,))
+        self.thread = Thread(target=self.handleThread, args=(ctx,))
         self.thread.start()
         return self
 
-    def update(self, ctx):
+    def handleThread(self, ctx):
+        asyncio.run(self.predict(ctx))
+
+    async def predict(self, ctx):
         # keep looping infinitely until thread is stopped
         while True:
             if self.stopped:

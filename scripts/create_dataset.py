@@ -2,6 +2,7 @@ import os
 import pickle
 import numpy as np
 from PIL import Image
+from keras_facenet import FaceNet
 
 from utils import extract_embeddings
 
@@ -9,6 +10,7 @@ from utils import extract_embeddings
 class Dataset:
     def __init__(self, data_path, verbose):
         self.data_path = data_path
+        self.extractor = FaceNet()
         self.verbose = verbose
 
     def load_images(self, dir):
@@ -20,7 +22,7 @@ class Dataset:
             image = Image.open(path)
             image = image.convert('RGB')
             pixels = np.asarray(image)
-            output = extract_embeddings(pixels, verbose=self.verbose)
+            output = extract_embeddings(self.extractor, pixels, verbose=self.verbose)
             if not output:
                 raise Exception(f'Something has gone wrong with image {path}')
             embeddings.append(output['embeddings'])

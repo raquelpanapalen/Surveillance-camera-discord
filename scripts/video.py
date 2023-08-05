@@ -6,6 +6,7 @@ from PIL import Image
 import asyncio
 from threading import Thread
 
+from get_environment import PREDICTION_TIME
 from scripts.predict import Predictor
 
 
@@ -20,16 +21,16 @@ class VideoStream:
         # indicates the current person
         self.person = None
 
-    def start(self, ctx):
+    def start(self, ctx, loop):
         # start the thread to read frames
         self.stream = cv2.VideoCapture(self.src)
         self.stopped = False
-        self.thread = Thread(target=self.handleThread, args=(ctx,))
+        self.thread = Thread(target=self.handleThread, args=(ctx, loop))
         self.thread.start()
         return self
 
-    def handleThread(self, ctx):
-        asyncio.run(self.predict(ctx))
+    def handleThread(self, ctx, loop):
+        asyncio.run_coroutine_threadsafe(self.predict(ctx), loop)
 
     async def predict(self, ctx):
         # keep looping infinitely until thread is stopped
@@ -41,11 +42,6 @@ class VideoStream:
             _, self.frame = self.stream.read()
             img = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
             result = self.predictor.predict(img)
-
-            # si se detectaba persona y ahora no, actualizar (pero no enviar mensaje)
-            # si no se detectaba persona y ahora si, actualizar y enviar mensaje
-            # si se detectaba persona y ahora se detecta la misma, no enviar mensaje
-            # si se detectaba persona y ahora se detecta otra, enviar mensaje
 
             if not result:
                 self.person = None
@@ -61,7 +57,7 @@ class VideoStream:
                         file=discord.File(fp=output, filename='now.png'),
                     )
 
-            time.sleep(60)
+            await asyncio.sleep(PREDICTION_TIME)
 
     def read(self):
         _, frame = self.stream.read()

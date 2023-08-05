@@ -2,6 +2,8 @@ import io
 import os
 import argparse
 import discord
+import asyncio
+from discord import Embed
 from discord.ext import commands
 
 from scripts.video import VideoStream
@@ -38,16 +40,32 @@ class DiscordBot:
 
         @self.client.event
         async def on_ready():
+            self.loop = asyncio.get_running_loop()
             print('Logged in as {}'.format(self.client.user.name))
 
         @self.client.command()
-        async def test(ctx, arg):
-            await ctx.send(arg)
+        async def info(ctx):
+            description = (
+                """
+                **"""
+                + COMMAND_PREFIX
+                + """ activate** -> Activate surveillance camera (face detection & recognition)
+                **"""
+                + COMMAND_PREFIX
+                + """ deactivate** -> Deactivate surveillance camera
+                    **"""
+                + COMMAND_PREFIX
+                + """ now** -> Get current camera image
+                """
+            )
+
+            embed = Embed(title="Bot commands", description=description)
+            await ctx.send(embed=embed)
 
         @self.client.command()
         async def activate(ctx):
             await ctx.send('Surveillance camera is active.')
-            self.vs.start(ctx)
+            self.vs.start(ctx, self.loop)
 
         @self.client.command()
         async def deactivate(ctx):

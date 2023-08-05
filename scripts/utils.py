@@ -1,13 +1,9 @@
-import numpy as np
 from PIL import Image
-from keras_facenet import FaceNet
 
 
-def extract_embeddings(image, face=False, verbose=False):
+def extract_embeddings(extractor, image, face=False, verbose=False):
     output = {}
-    embedder = FaceNet()
-    results = embedder.extract(image, threshold=0.95)
-    print(results)
+    results = extractor.extract(image, threshold=0.95)
     if not len(results) or len(results) > 1:
         return None
 

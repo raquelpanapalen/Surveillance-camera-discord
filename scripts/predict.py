@@ -1,5 +1,6 @@
 import pickle
 import numpy as np
+from keras_facenet import FaceNet
 from sklearn.preprocessing import LabelEncoder
 
 from .utils import extract_embeddings
@@ -8,12 +9,13 @@ from .utils import extract_embeddings
 class Predictor:
     def __init__(self, model_path, labels_path) -> None:
         self.label_encoder = LabelEncoder()
+        self.extractor = FaceNet()
         self.label_encoder.classes_ = pickle.load(open(labels_path, 'rb'))
         self.model = pickle.load(open(model_path, 'rb'))
 
     def predict(self, image):
         # feature extraction
-        output = extract_embeddings(image=image, face=True)
+        output = extract_embeddings(extractor=self.extractor, image=image, face=True)
         if not output:
             return None
 

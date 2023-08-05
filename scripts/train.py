@@ -17,7 +17,7 @@ def get_args():
         '-l',
         '--labels',
         dest='labels_path',
-        default=f'{os.getcwd()}/labels.npy',
+        default=f'{os.getcwd()}/labels.pkl',
     )
     parser.add_argument(
         '-d',
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     dataset = Dataset(data_path=args.data_path, verbose=args.verbose)
     dataset.save_data()
     classifier = Classifier(
-        data_path=f'{args.data_path}/data.npy',
+        data_path=f'{args.data_path}/data.pkl',
         model_path=args.model_path,
         labels_path=args.labels_path,
         verbose=args.verbose,

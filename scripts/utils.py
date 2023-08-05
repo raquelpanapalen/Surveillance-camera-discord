@@ -7,8 +7,10 @@ def extract_embeddings(image, face=False, verbose=False):
     output = {}
     embedder = FaceNet()
     results = embedder.extract(image, threshold=0.95)
-    if len(results) != 1:
-        quit(results)
+    print(results)
+    if not len(results) or len(results) > 1:
+        return None
+
     output['embeddings'] = results[0]['embedding']
 
     if face:

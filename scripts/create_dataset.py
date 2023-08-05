@@ -1,4 +1,5 @@
 import os
+import pickle
 import numpy as np
 from PIL import Image
 
@@ -20,6 +21,8 @@ class Dataset:
             image = image.convert('RGB')
             pixels = np.asarray(image)
             output = extract_embeddings(pixels, verbose=self.verbose)
+            if not output:
+                raise Exception(f'Something has gone wrong with image {path}')
             embeddings.append(output['embeddings'])
 
         return embeddings
@@ -49,5 +52,5 @@ class Dataset:
         for subset in subsets:
             self.load_subset(subset=subset, dir=f'{self.data_path}/{subset}')
 
-        self.data = {np.asarray(self.data[key]) for key in self.data.keys()}
-        np.save(f'{self.data_path}/data.npy', self.data)
+        self.data = {key: np.stack(self.data[key]) for key in self.data.keys()}
+        pickle.dump(self.data, open(f'{self.data_path}/data.pkl', 'wb'))

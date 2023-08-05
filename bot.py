@@ -20,7 +20,7 @@ def get_args():
         '-l',
         '--labels',
         dest='labels_path',
-        default=f'{os.getcwd()}/labels.npy',
+        default=f'{os.getcwd()}/labels.pkl',
     )
     args = parser.parse_args()
     return args

@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDis
 
 class Classifier:
     def __init__(self, data_path, model_path, labels_path, verbose=False) -> None:
-        self.data = np.load(data_path)
+        self.data = pickle.load(open(data_path, 'rb'))
         self.model_path = model_path
         self.labels_path = labels_path
         self.label_encoder = LabelEncoder()
@@ -32,7 +32,7 @@ class Classifier:
 
         # Save model
         pickle.dump(self.model, open(self.model_path, 'wb'))
-        np.save(self.labels_path, self.label_encoder.classes_)
+        pickle.dump(self.label_encoder.classes_, open(self.labels_path, 'wb'))
 
         # predict
         predict_train = self.model.predict(train_emb)
@@ -49,7 +49,7 @@ class Classifier:
 
         print(f'Train accuracy: {acc_train} \nTest accuracy: {acc_test}')
         if self.verbose:
-            for i, pred_label_name, score in enumerate(
+            for i, (pred_label_name, score) in enumerate(
                 zip(predict_test_names, confidence)
             ):
                 print(
@@ -63,8 +63,4 @@ class Classifier:
                 predict_test_names,
                 labels=self.label_encoder.classes_,
             )
-            disp = ConfusionMatrixDisplay(
-                confusion_matrix=cm, display_labels=self.label_encoder.classes_
-            )
-            disp.plot()
-            plt.show()
+            print(cm)

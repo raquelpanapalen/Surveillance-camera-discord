@@ -2,5 +2,6 @@
 .env
 .vscode
 data
+camera_data
 __pycache__
 *.pkl

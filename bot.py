@@ -7,7 +7,7 @@ from discord import Embed
 from discord.ext import commands
 
 from scripts.video import VideoStream
-from get_environment import DISCORD_TOKEN, COMMAND_PREFIX, VIDEO_SRC
+from scripts.get_environment import DISCORD_TOKEN, COMMAND_PREFIX, VIDEO_SRC
 
 
 def get_args():

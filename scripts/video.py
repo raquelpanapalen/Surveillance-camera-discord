@@ -1,12 +1,11 @@
 import io
 import cv2
-import time
 import discord
 from PIL import Image
 import asyncio
 from threading import Thread
 
-from get_environment import PREDICTION_TIME
+from scripts.get_environment import PREDICTION_TIME
 from scripts.predict import Predictor
 
 
